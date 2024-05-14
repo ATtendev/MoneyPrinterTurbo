@@ -1,6 +1,9 @@
 import sys
 import os
 import time
+from pathlib import Path
+from os import path
+
 
 # Add the root directory of the project to the system path to allow importing modules from the project
 root_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
@@ -321,7 +324,7 @@ left_panel = panel[0]
 middle_panel = panel[1]
 right_panel = panel[2]
 
-params = VideoParams(video_subject="")
+params = VideoParams(video_subject="", is_voice_clone=False)
 uploaded_files = []
 
 with left_panel:
@@ -438,6 +441,27 @@ with middle_panel:
                                               options=list(friendly_names.values()),
                                               index=saved_voice_name_index)
 
+        is_voice_clone = st.checkbox(tr("Using voice cloning"))
+        if is_voice_clone:
+            params.is_voice_clone = is_voice_clone
+            files = os.listdir(utils.storage_dir("ref_voice",create=True))
+            # get list voice references
+            voice_ref = st.selectbox(tr("Voice references"),
+                                              options=files,
+                                              index=None,
+                                              )
+            if voice_ref is not None:
+                params.voice_clone_reference = path.join(utils.storage_dir("ref_voice",create=True), voice_ref)
+            voice_clone_uploaded_file = st.file_uploader("Choose a audio file to use voice cloning",type=['mp3','wav'])
+            if voice_clone_uploaded_file is not None:
+                audio_bytes = voice_clone_uploaded_file.read()
+                upload_temp = path.join(utils.storage_dir("ref_voice",create=True), voice_clone_uploaded_file.name)
+                with open(upload_temp, mode='wb') as w:
+                    w.write(voice_clone_uploaded_file.getvalue())
+                params.voice_clone_reference = upload_temp
+                st.audio(audio_bytes, format="audio/wav")
+        
+        
         voice_name = list(friendly_names.keys())[list(friendly_names.values()).index(selected_friendly_name)]
         params.voice_name = voice_name
         config.ui['voice_name'] = voice_name

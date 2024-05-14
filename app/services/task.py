@@ -2,8 +2,11 @@ import math
 import os.path
 import re
 from os import path
-
+from gradio_client import Client, file
 from loguru import logger
+import shutil
+
+
 
 from app.config import config
 from app.models import const
@@ -71,22 +74,38 @@ def start(task_id, params: VideoParams):
         f.write(utils.to_json(script_data))
 
     sm.state.update_task(task_id, state=const.TASK_STATE_PROCESSING, progress=20)
+    audio_file=""
+    audio_duration=0
+    if params.is_voice_clone == False:
+        logger.info("\n\n## generating audio")
+        audio_file = path.join(utils.task_dir(task_id), f"audio.mp3")
+        sub_maker = voice.tts(text=video_script, voice_name=voice_name, voice_file=audio_file)
+        if sub_maker is None:
+            sm.state.update_task(task_id, state=const.TASK_STATE_FAILED)
+            logger.error(
+                """failed to generate audio:
+    1. check if the language of the voice matches the language of the video script.
+    2. check if the network is available. If you are in China, it is recommended to use a VPN and enable the global traffic mode.
+            """.strip()
+            )
+            return
 
-    logger.info("\n\n## generating audio")
-    audio_file = path.join(utils.task_dir(task_id), f"audio.mp3")
-    sub_maker = voice.tts(text=video_script, voice_name=voice_name, voice_file=audio_file)
-    if sub_maker is None:
-        sm.state.update_task(task_id, state=const.TASK_STATE_FAILED)
-        logger.error(
-            """failed to generate audio:
-1. check if the language of the voice matches the language of the video script.
-2. check if the network is available. If you are in China, it is recommended to use a VPN and enable the global traffic mode.
-        """.strip()
+        audio_duration = voice.get_audio_duration(sub_maker)
+        audio_duration = math.ceil(audio_duration)
+    else:
+        client = Client(config.voice_clone.get("url","").strip().lower())
+        source_file = client.predict(
+            text=video_script,
+            voice=file(params.voice_clone_reference),
+            vcsteps=20,
+            embscale=1,
+            alpha=0.3,
+            beta=0.7,
+            api_name="/clsynthesize"
         )
-        return
-
-    audio_duration = voice.get_audio_duration(sub_maker)
-    audio_duration = math.ceil(audio_duration)
+        shutil.copy(source_file, utils.task_dir(task_id))
+        audio_file = path.join(utils.task_dir(task_id), f"audio.wav")
+        audio_duration = voice.get_wav_duration(audio_file)
 
     sm.state.update_task(task_id, state=const.TASK_STATE_PROCESSING, progress=30)
 

@@ -38,6 +38,7 @@ def save_config():
         _cfg["pexels"] = pexels
         _cfg["azure"] = azure
         _cfg["ui"] = ui
+        _cfg["voice_clone"] = voice_clone
         f.write(toml.dumps(_cfg))
 
 
@@ -47,6 +48,7 @@ whisper = _cfg.get("whisper", {})
 pexels = _cfg.get("pexels", {})
 azure = _cfg.get("azure", {})
 ui = _cfg.get("ui", {})
+voice_clone = _cfg.get("voice_clone", {})
 
 hostname = socket.gethostname()
 

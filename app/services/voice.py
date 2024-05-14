@@ -1,6 +1,8 @@
 import asyncio
 import os
 import re
+import wave
+import math
 from datetime import datetime
 from xml.sax.saxutils import unescape
 from edge_tts.submaker import mktimestamp
@@ -1247,6 +1249,23 @@ def get_audio_duration(sub_maker: submaker.SubMaker):
         return 0.0
     return sub_maker.offset[-1][1] / 10000000
 
+def get_wav_duration(file_path):
+    try:
+        with wave.open(file_path, 'rb') as audio:
+            # Get the number of frames and the frame rate
+            num_frames = audio.getnframes()
+            frame_rate = audio.getframerate()
+            
+            # Calculate the duration
+            duration = num_frames / float(frame_rate)
+            
+            # Round up the duration to the nearest second
+            duration = math.ceil(duration)
+            
+            return duration
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
 
 if __name__ == "__main__":
     voice_name = "zh-CN-XiaoxiaoMultilingualNeural-V2-Female"

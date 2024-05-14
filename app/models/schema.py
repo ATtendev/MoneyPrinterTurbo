@@ -107,6 +107,8 @@ class VideoParams(BaseModel):
     video_language: Optional[str] = ""  # auto detect
 
     voice_name: Optional[str] = ""
+    is_voice_clone: bool = False
+    voice_clone_reference: str = "" # link to voice uploaded for voice clone
     voice_volume: Optional[float] = 1.0
     bgm_type: Optional[str] = "random"
     bgm_file: Optional[str] = ""

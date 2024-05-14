@@ -436,17 +436,22 @@ with middle_panel:
                 if v.lower().startswith(st.session_state['ui_language'].lower()) and "V2" not in v:
                     saved_voice_name_index = i
                     break
-
+                
+        if "voice_clone" not in st.session_state:
+            st.session_state.voice_clone = False
+            
         selected_friendly_name = st.selectbox(tr("Speech Synthesis"),
                                               options=list(friendly_names.values()),
-                                              index=saved_voice_name_index)
+                                              index=saved_voice_name_index,
+                                              disabled=st.session_state.voice_clone)
 
-        is_voice_clone = st.checkbox(tr("Using voice cloning"))
+        is_voice_clone = st.checkbox(tr("Using voice cloning"),key = "voice_clone")
         if is_voice_clone:
+            st.session_state.selected_friendly_name = True
             params.is_voice_clone = is_voice_clone
             files = os.listdir(utils.storage_dir("ref_voice",create=True))
             # get list voice references
-            voice_ref = st.selectbox(tr("Voice references"),
+            voice_ref = st.selectbox(tr("Voice references",),
                                               options=files,
                                               index=None,
                                               )
@@ -460,8 +465,7 @@ with middle_panel:
                     w.write(voice_clone_uploaded_file.getvalue())
                 params.voice_clone_reference = upload_temp
                 st.audio(audio_bytes, format="audio/wav")
-        
-        
+            
         voice_name = list(friendly_names.keys())[list(friendly_names.values()).index(selected_friendly_name)]
         params.voice_name = voice_name
         config.ui['voice_name'] = voice_name

@@ -23,6 +23,8 @@
     "Number of Videos Generated Simultaneously": "Số Video Được Tạo Ra Đồng Thời",
     "Audio Settings": "**Cài Đặt Âm Thanh**",
     "Speech Synthesis": "Giọng Đọc Văn Bản",
+    "Using voice cloning": "Bắt trước giọng - thử nghiệm (chỉ hoạt động với tiếng Anh)",
+    "Voice references" : "Giọng tham chiếu",
     "Speech Region": "Vùng(:red[Bắt Buộc，[Lấy Vùng](https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/SpeechServices)])",
     "Speech Key": "Khóa API(:red[Bắt Buộc，[Lấy Khóa API](https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/SpeechServices)])",
     "Speech Volume": "Âm Lượng Giọng Đọc (1.0 đại diện cho 100%)",

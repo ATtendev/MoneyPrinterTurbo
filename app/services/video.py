@@ -241,7 +241,7 @@ def generate_video(video_path: str,
         _clip = _clip.set_end(subtitle_item[0][1])
         _clip = _clip.set_duration(duration)
         if params.subtitle_position == "bottom":
-            _clip = _clip.set_position(('center', video_height * 0.95 - _clip.h))
+            _clip = _clip.set_position(('center', video_height * 0.85 - _clip.h))
         elif params.subtitle_position == "top":
             _clip = _clip.set_position(('center', video_height * 0.1))
         else:

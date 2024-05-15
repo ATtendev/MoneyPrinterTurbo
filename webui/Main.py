@@ -53,7 +53,8 @@ i18n_dir = os.path.join(root_dir, "webui", "i18n")
 config_file = os.path.join(root_dir, "webui", ".streamlit", "webui.toml")
 system_locale = utils.get_system_locale()
 # print(f"******** system locale: {system_locale} ********")
-
+if 'video_title' not in st.session_state:
+    st.session_state['video_title'] = ''
 if 'video_subject' not in st.session_state:
     st.session_state['video_subject'] = ''
 if 'video_script' not in st.session_state:
@@ -358,6 +359,18 @@ with left_panel:
             value=st.session_state['video_script'],
             height=280
         )
+        
+        if st.button(tr("Generate Video Title"), key="auto_generate_title"):
+            with st.spinner(tr("Generating Video Title")):
+                script = llm.generate_title(video_subject=params.video_script, language=params.video_language)
+                st.session_state['video_title'] = script
+        
+        st.text_area(
+            tr("Video Title"),
+            value=st.session_state['video_title'],
+            height=100
+        )
+        
         if st.button(tr("Generate Video Keywords"), key="auto_generate_terms"):
             if not params.video_script:
                 st.error(tr("Please Enter the Video Subject"))

@@ -8,6 +8,8 @@
     "Auto Detect": "Tự Động Phát Hiện",
     "Video Script": "Kịch Bản Video (:blue[① Tùy chọn, AI tạo ra  ② Dấu câu chính xác giúp việc tạo phụ đề)",
     "Generate Video Keywords": "Nhấn để sử dụng AI để tạo [Từ Khóa Video] dựa trên **kịch bản**",
+    "Generate Video Title": "Nhấn để sử dụng AI để tạo **[Tiêu đề video]** dựa trên **[Từ Khóa Video]**",
+    "Video Title": "Tiêu Đề Video",
     "Please Enter the Video Subject": "Vui lòng Nhập Kịch Bản Video Trước",
     "Generating Video Script and Keywords": "AI đang tạo kịch bản video và từ khóa...",
     "Generating Video Keywords": "AI đang tạo từ khóa video...",

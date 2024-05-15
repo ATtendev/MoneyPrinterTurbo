@@ -215,6 +215,8 @@ Generate a script for a video, depending on the subject of the video.
     logger.info(f"subject: {video_subject}")
     # logger.debug(f"prompt: \n{prompt}")
     response = _generate_response(prompt=prompt)
+    # logger.info(f"response: {response}")
+    logger.info(f"---------------> : {response}")
 
     # Return the generated script
     if response:
@@ -248,6 +250,59 @@ Generate a script for a video, depending on the subject of the video.
     logger.success(f"completed: \n{final_script}")
     return final_script
 
+def generate_title(video_subject: str, language: str = "", paragraph_number: int = 1) -> str:
+    prompt = f"""
+    # Role: Social Media Title Generator
+    # Content: 
+        {video_subject}
+    ## Goals:
+    Create a catchy and concise title suitable for sharing on social media platforms.
+    ## Constraints:
+    1. Ensure the title is short and to the point.
+    2. Infuse humor into the title to make it engaging and memorable.
+    
+    """.strip()
+
+    if language:
+        prompt += f"\n- language: {language}"
+
+    final_script = ""
+    logger.info(f"subject: {video_subject}")
+    logger.info(f"prompt: \n{prompt}")
+    response = _generate_response(prompt=prompt)
+    logger.info(f"response: \n{response}")
+
+    # Return the generated script
+    if response:
+        # Clean the script
+        # Remove asterisks, hashes
+        response = response.replace("*", "")
+        response = response.replace("#", "")
+
+        # Remove markdown syntax
+        response = re.sub(r"\[.*\]", "", response)
+        response = re.sub(r"\(.*\)", "", response)
+
+        # Split the script into paragraphs
+        paragraphs = response.split("\n\n")
+
+        # Select the specified number of paragraphs
+        selected_paragraphs = paragraphs[:paragraph_number]
+
+        # Join the selected paragraphs into a single string
+        final_script = "\n\n".join(selected_paragraphs)
+
+        # Print to console the number of paragraphs used
+        # logger.info(f"number of paragraphs used: {len(selected_paragraphs)}")
+    else:
+        logging.error("gpt returned an empty response")
+
+    # g4f may return an error message
+    if final_script and "当日额度已消耗完" in final_script:
+        raise ValueError(final_script)
+
+    logger.success(f"completed: \n{final_script}")
+    return final_script
 
 def generate_terms(video_subject: str, video_script: str, amount: int = 5) -> List[str]:
     prompt = f"""

@@ -34,8 +34,6 @@ def load_config():
 def save_config():
     with open(config_file, "w", encoding="utf-8") as f:
         _cfg["app"] = app
-        _cfg["whisper"] = whisper
-        _cfg["pexels"] = pexels
         _cfg["azure"] = azure
         _cfg["ui"] = ui
         _cfg["voice_clone"] = voice_clone
@@ -45,7 +43,7 @@ def save_config():
 _cfg = load_config()
 app = _cfg.get("app", {})
 whisper = _cfg.get("whisper", {})
-pexels = _cfg.get("pexels", {})
+proxy = _cfg.get("proxy", {})
 azure = _cfg.get("azure", {})
 ui = _cfg.get("ui", {})
 voice_clone = _cfg.get("voice_clone", {})
@@ -58,7 +56,7 @@ listen_port = _cfg.get("listen_port", 8080)
 project_name = _cfg.get("project_name", "MoneyPrinterTurbo")
 project_description = _cfg.get("project_description",
                                "<a href='https://github.com/harry0703/MoneyPrinterTurbo'>https://github.com/harry0703/MoneyPrinterTurbo</a>")
-project_version = _cfg.get("project_version", "1.1.7")
+project_version = _cfg.get("project_version", "1.1.8")
 reload_debug = False
 
 imagemagick_path = app.get("imagemagick_path", "")
